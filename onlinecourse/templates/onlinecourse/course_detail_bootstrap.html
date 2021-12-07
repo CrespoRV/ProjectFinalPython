@@ -57,7 +57,7 @@
                 
                 {% if user.is_authenticated %}
 
-                    <form id="questionform" action="point to a submit view" method="post">
+                    <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
 
                         {% for question in course.question_set.all %}
 
@@ -79,6 +79,8 @@
 
                             </div>
                         {% endfor %}
+
+                        <button type="submit" class="btn btn-primary"> EVAL </button>
 
                     </form>
 

@@ -110,11 +110,28 @@ class Question(models.Model):
     def is_get_score(self, selected_ids):
         all_answers = self.choice_set.filter(is_correct=True).count()
         selected_correct = self.choice_set.filter(is_correct=True, id__in=selected_ids).count()
-        if all_answers == selected_correct:
+        if (all_answers == selected_correct):
             return True
         else:
             return False
 
+    def is_get_realscore(self, selected_ids):
+        all_answers = self.choice_set.filter(is_correct=True).values_list('id')
+        ac_answers = self.choice_set.filter(id__in=selected_ids).values_list('id')
+        band = True
+        print(ac_answers)
+        print(all_answers)
+        
+
+        if ((len(selected_ids)==0) or (ac_answers.count()!=all_answers.count())):
+            band = False
+        else:
+            for choice in ac_answers:
+                if (choice not in all_answers):
+                    band = False
+        
+        return band
+    
 
 #  <HINT> Create a Choice Model with:
     # Used to persist choice content for a question
