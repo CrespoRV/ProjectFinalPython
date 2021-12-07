@@ -104,15 +104,6 @@ def enroll(request, course_id):
     return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course.id,)))
 
 
-# <HINT> Create a submit view to create an exam submission record for a course enrollment,
-# you may implement it based on following logic:
-         # Get user and course object, then get the associated enrollment object created when the user enrolled the course
-         # Create a submission object referring to the enrollment
-         # Collect the selected choices from exam form
-         # Add each selected choice object to the submission object
-         # Redirect to show_exam_result with the submission id
-#def submit(request, course_id):
-
 def extract_answers(request):
     submitted_anwsers = []
     for key in request.POST:
@@ -154,28 +145,18 @@ def show_exam_result(request,course_id,submission_id):
     for question in questions:
         if (question.is_get_realscore(selected_id)):
             get_points += question.value
+    
+    grade = (get_points/tot_points)*100
 
-    context['grade'] = (get_points/tot_points)*100
-    context['total_points'] = tot_points
-    context['get_points'] = get_points
+    context['grade'] = round(grade,2)
+    context['get_points'] = round(grade)
+    context['id_course'] = course.id
+    context['course'] = course
+    context['selected_id'] = selected_id
     
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
 
 
-    
-
-
-# <HINT> A example method to collect the selected choices from the exam form from the request object
-
-
-
-# <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,
-# you may implement it based on the following logic:
-        # Get course and submission based on their ids
-        # Get the selected choice ids from the submission record
-        # For each selected choice, check if it is a correct answer or not
-        # Calculate the total score
-#def show_exam_result(request, course_id, submission_id):
 
 
 
